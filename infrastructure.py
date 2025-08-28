@@ -63,6 +63,42 @@ class Infrastructure:
             'cost': 500,
             'maintenance': 25,
             'description': 'High-speed transportation'
+        },
+        'school': {
+            'color': '#FFD700',  # Gold
+            'cost': 25000,
+            'maintenance': 300,
+            'education_range': 8,
+            'description': 'Educational facility'
+        },
+        'hospital': {
+            'color': '#FF6347',  # Tomato
+            'cost': 40000,
+            'maintenance': 500,
+            'health_range': 10,
+            'description': 'Medical facility'
+        },
+        'park': {
+            'color': '#32CD32',  # Lime green
+            'cost': 3000,
+            'maintenance': 25,
+            'happiness_range': 6,
+            'happiness_boost': 10,
+            'description': 'Recreation area'
+        },
+        'police_station': {
+            'color': '#000080',  # Navy
+            'cost': 30000,
+            'maintenance': 400,
+            'safety_range': 12,
+            'description': 'Law enforcement'
+        },
+        'fire_station': {
+            'color': '#DC143C',  # Crimson
+            'cost': 20000,
+            'maintenance': 250,
+            'safety_range': 10,
+            'description': 'Fire protection'
         }
     }
     

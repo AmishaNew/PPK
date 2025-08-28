@@ -367,8 +367,16 @@ class CitySimulationUI:
         self.canvas.bind("<Button-1>", self._on_canvas_click)
         self.canvas.bind("<B1-Motion>", self._on_canvas_drag)
         self.canvas.bind("<ButtonRelease-1>", self._on_canvas_release)
+        self.canvas.bind("<Button-3>", self._on_canvas_right_click)  # Right click for panning
+        self.canvas.bind("<B3-Motion>", self._on_canvas_pan)
+        self.canvas.bind("<ButtonRelease-3>", self._on_canvas_right_release)
         self.canvas.bind("<Motion>", self._on_canvas_motion)
         self.canvas.bind("<MouseWheel>", self._on_canvas_wheel)
+        
+        # Pan state tracking
+        self.panning = False
+        self.pan_start_x = 0
+        self.pan_start_y = 0
         
         # Keyboard shortcuts
         self.root.bind("<Control-s>", lambda e: self._save_city())
@@ -453,6 +461,47 @@ class CitySimulationUI:
             self._zoom_in()
         else:
             self._zoom_out()
+    
+    def _on_canvas_right_click(self, event):
+        """Handle right click to start panning."""
+        self.panning = True
+        self.pan_start_x = event.x
+        self.pan_start_y = event.y
+        self.canvas.config(cursor="fleur")  # Change cursor to indicate panning
+    
+    def _on_canvas_pan(self, event):
+        """Handle mouse drag for panning."""
+        if self.panning:
+            dx = event.x - self.pan_start_x
+            dy = event.y - self.pan_start_y
+            
+            # Update scroll position
+            self.scroll_x = max(0, self.scroll_x - dx)
+            self.scroll_y = max(0, self.scroll_y - dy)
+            
+            # Update canvas scroll view
+            canvas_width = self.canvas.winfo_width()
+            canvas_height = self.canvas.winfo_height()
+            total_width = self.city.width * self.cell_size * self.zoom_level
+            total_height = self.city.height * self.cell_size * self.zoom_level
+            
+            # Calculate scroll fractions
+            if total_width > canvas_width:
+                x_frac = self.scroll_x / (total_width - canvas_width)
+                self.canvas.xview_moveto(max(0, min(1, x_frac)))
+            
+            if total_height > canvas_height:
+                y_frac = self.scroll_y / (total_height - canvas_height)
+                self.canvas.yview_moveto(max(0, min(1, y_frac)))
+            
+            self.pan_start_x = event.x
+            self.pan_start_y = event.y
+            self._update_canvas()
+    
+    def _on_canvas_right_release(self, event):
+        """Handle right click release to stop panning."""
+        self.panning = False
+        self.canvas.config(cursor="")
     
     def _inspect_cell(self, x: int, y: int):
         """Show detailed information about a cell."""
