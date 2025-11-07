@@ -145,7 +145,7 @@ class Simulation:
     def _process_daily_update(self):
         """Process daily simulation updates."""
         # Random events and disasters
-        if random.random() < self.disaster_probability:
+        if random.random() self.disaster_probability:
             self._trigger_random_event()
         
         # Update infrastructure condition
